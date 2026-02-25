@@ -4,6 +4,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PrismaService } from './prisma.service'
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { PrismaService } from './prisma.service'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

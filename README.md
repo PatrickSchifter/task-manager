@@ -1,8 +1,1 @@
-model Project {
-  id String @id @default(uuid())
-  name String
-  description String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+DTOs tem a função de middleware de validação e de interface

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   ParseUUIDPipe,
@@ -13,7 +14,6 @@ import {
 import { ApiResponse } from '@nestjs/swagger'
 import { ProjectItemListDTO, ProjectRequestDTO } from './projects.dto'
 import { ProjectsService } from './projects.service'
-
 @Controller({ path: 'projects', version: '1' })
 export class ProjectsController {
   constructor(private readonly projectService: ProjectsService) {}
@@ -26,8 +26,14 @@ export class ProjectsController {
 
   @Get(':id')
   @ApiResponse({ type: ProjectItemListDTO })
-  findById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.projectService.findById(id)
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
+    const project = await this.projectService.findById(id)
+
+    if (!project) {
+      throw new HttpException('Project not found', HttpStatus.NOT_FOUND)
+    }
+
+    return project
   }
 
   @Post()
@@ -38,13 +44,21 @@ export class ProjectsController {
 
   @Put(':id')
   @ApiResponse({ type: ProjectItemListDTO })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() data: ProjectRequestDTO) {
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() data: ProjectRequestDTO) {
+    const projectExists = await this.projectService.findById(id)
+
+    if (!projectExists) throw new HttpException('Project not found', HttpStatus.NOT_FOUND)
+
     return this.projectService.update(id, data)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseUUIDPipe) id: string) {
+  async delete(@Param('id', ParseUUIDPipe) id: string) {
+    const projectExists = await this.projectService.findById(id)
+
+    if (!projectExists) throw new HttpException('Project not found', HttpStatus.NOT_FOUND)
+
     return this.projectService.delete(id)
   }
 }
