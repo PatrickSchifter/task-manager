@@ -26,19 +26,55 @@ model User {
 
   createProjects  Project[] @relation("UserProjects")
   tasksAssigned   Task[]    @relation("AssignedTasks")
+  comments        Comment[]
+  collaborations  ProjectCollaborator[]
+}
+
+enum CollaboratorRole {
+  VIEWER
+  EDITOR
+  OWNER
+}
+
+model ProjectCollaborator {
+  id              String @id @default(uuid())
+  role            CollaboratorRole @default(EDITOR)
+  projectId       String
+  userId          String
+
+  createdAt       DateTime @default(now())
+
+  user            User @relation(fields: [userId], references: [id])
+  project         Project @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId])
+}
+
+model Comment {
+  id        String @id @default(uuid())
+  content   String
+  authorId  String
+  taskId    String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author    User @relation(fields: [authorId], references: [id])
+  task      Task @relation(fields: [taskId], references: [id])
 }
 
 model Project {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  createdById String
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  createdById     String
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  tasks       Task[]
-  createdBy   User @relation("UserProjects", fields: [createdById], references: [id])
+  tasks           Task[]
+  createdBy       User @relation("UserProjects", fields: [createdById], references: [id])
+  collaborators   ProjectCollaborator[]
 }
 
 enum TaskStatus {
@@ -61,7 +97,8 @@ model Task {
   updatedAt     DateTime @updatedAt
 
   project       Project @relation(fields: [projectId], references: [id])
-  assignee   User? @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assignee      User? @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  comments      Comment[]
 }
 
 enum TaskPriority {
