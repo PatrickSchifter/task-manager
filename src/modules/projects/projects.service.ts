@@ -10,7 +10,28 @@ export class ProjectsService {
   }
 
   findById(id: string) {
-    return this.prisma.project.findFirst({ where: { id } })
+    return this.prisma.project.findFirst({
+      where: { id },
+      select: {
+        tasks: {
+          select: {
+            title: true,
+            description: true,
+            id: true,
+            dueDate: true,
+            createdAt: true,
+            updatedAt: true,
+            priority: true,
+            status: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+        description: true,
+        id: true,
+      },
+    })
   }
 
   create(data: ProjectDTO) {
@@ -21,7 +42,8 @@ export class ProjectsService {
     return this.prisma.project.update({ where: { id }, data })
   }
 
-  delete(id: string) {
+  async delete(id: string) {
+    await this.prisma.task.deleteMany({ where: { projectId: id } })
     return this.prisma.project.delete({ where: { id } })
   }
 }

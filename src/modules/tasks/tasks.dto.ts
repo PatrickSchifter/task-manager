@@ -38,3 +38,15 @@ export class TasksDTO {
   @IsOptional()
   duoDate?: string
 }
+
+export class TaskItemListDTO {
+  @ApiProperty() id: string
+  @ApiProperty() title: string
+  @ApiProperty() description: string
+  @ApiProperty({ enum: TaskStatus }) status: TaskStatus
+  @ApiProperty({ enum: TaskPriority }) priority: TaskPriority
+  @ApiProperty({ format: 'date-time' }) dueDate: string
+  @ApiProperty() projectId: string
+  @ApiProperty({ format: 'date-time' }) createdAt: string
+  @ApiProperty({ format: 'date-time' }) updatedAt: string
+}

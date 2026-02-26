@@ -14,7 +14,7 @@ import {
 import { ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
-import { ProjectDTO, ProjectItemListDTO } from './projects.dto'
+import { ProjectDTO, ProjectFullDTO, ProjectItemListDTO } from './projects.dto'
 import { ProjectsService } from './projects.service'
 
 @Controller({ path: 'projects', version: '1' })
@@ -29,9 +29,9 @@ export class ProjectsController {
   }
 
   @Get(':projectId')
-  @ApiResponse({ type: ProjectItemListDTO })
+  @ApiResponse({ type: ProjectFullDTO })
   @ValidateResourcesIds()
-  async findById(@Param('projectId', ParseUUIDPipe) id: string) {
+  findById(@Param('projectId', ParseUUIDPipe) id: string) {
     return this.projectService.findById(id)
   }
 
@@ -44,14 +44,14 @@ export class ProjectsController {
   @Put(':projectId')
   @ApiResponse({ type: ProjectItemListDTO })
   @ValidateResourcesIds()
-  async update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: ProjectDTO) {
+  update(@Param('projectId', ParseUUIDPipe) id: string, @Body() data: ProjectDTO) {
     return this.projectService.update(id, data)
   }
 
   @Delete(':projectId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ValidateResourcesIds()
-  async delete(@Param('projectId', ParseUUIDPipe) id: string) {
+  delete(@Param('projectId', ParseUUIDPipe) id: string) {
     return this.projectService.delete(id)
   }
 }
