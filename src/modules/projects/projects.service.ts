@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
-import { ProjectRequestDTO } from './projects.dto'
+import { ProjectDTO } from './projects.dto'
 
 @Injectable()
 export class ProjectsService {
@@ -13,11 +13,11 @@ export class ProjectsService {
     return this.prisma.project.findFirst({ where: { id } })
   }
 
-  create(data: ProjectRequestDTO) {
+  create(data: ProjectDTO) {
     return this.prisma.project.create({ data })
   }
 
-  update(id: string, data: ProjectRequestDTO) {
+  update(id: string, data: ProjectDTO) {
     return this.prisma.project.update({ where: { id }, data })
   }
 
