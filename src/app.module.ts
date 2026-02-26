@@ -5,6 +5,7 @@ import { AppService } from './app.service'
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PrismaService } from './prisma.service'
 import { TasksModule } from './modules/tasks/tasks.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
       isGlobal: true,
     }),
     TasksModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

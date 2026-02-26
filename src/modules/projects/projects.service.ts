@@ -35,7 +35,9 @@ export class ProjectsService {
   }
 
   create(data: ProjectDTO) {
-    return this.prisma.project.create({ data })
+    return this.prisma.project.create({
+      data: { ...data, createdById: '20fe7367-d3ee-4de5-8143-991d6245994f' },
+    })
   }
 
   update(id: string, data: ProjectDTO) {
