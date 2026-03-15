@@ -16,7 +16,7 @@ export class ProjectDTO {
 export class ProjectTaskDTO {
   @ApiProperty() id: string
   @ApiProperty() title: string
-  @ApiProperty() description: string
+  @ApiProperty({ nullable: true }) description: string
   @ApiProperty({ enum: TaskStatus, default: TaskStatus.TODO }) status: TaskStatus
   @ApiProperty({ enum: TaskPriority, default: TaskPriority.MEDIUM }) priority: TaskPriority
   @ApiProperty({ format: 'date-time' }) dueDate: string

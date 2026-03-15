@@ -11,7 +11,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiResponse } from '@nestjs/swagger'
+import { ApiCreatedResponse, ApiNoContentResponse, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { TaskItemListDTO, TasksDTO } from '../tasks/tasks.dto'
@@ -33,7 +33,8 @@ export class TasksController {
   }
 
   @Post()
-  @ApiResponse({ type: TaskItemListDTO })
+  @ApiCreatedResponse({ type: TaskItemListDTO })
+  @HttpCode(HttpStatus.CREATED)
   @ValidateResourcesIds()
   create(@Param('projectId', ParseUUIDPipe) projectId: string, @Body() data: TasksDTO) {
     return this.taskService.create({ ...data, project: { connect: { id: projectId } } })
@@ -62,6 +63,7 @@ export class TasksController {
 
   @Delete(':taskId')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   @ValidateResourcesIds()
   delete(
     @Param('taskId', ParseUUIDPipe) taskId: string,

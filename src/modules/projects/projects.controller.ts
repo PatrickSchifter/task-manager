@@ -11,7 +11,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiResponse } from '@nestjs/swagger'
+import { ApiCreatedResponse, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { ProjectDTO, ProjectFullDTO, ProjectItemListDTO } from './projects.dto'
@@ -36,7 +36,8 @@ export class ProjectsController {
   }
 
   @Post()
-  @ApiResponse({ type: ProjectItemListDTO })
+  @ApiCreatedResponse({ type: ProjectItemListDTO })
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() data: ProjectDTO) {
     return this.projectService.create(data)
   }
