@@ -38,9 +38,9 @@ export class TasksController {
   @ValidateResourcesIds()
   create(@Param('projectId', ParseUUIDPipe) projectId: string, @Body() data: TasksDTO) {
     return this.taskService.create({
-      ...data,
-      project: { connect: { id: projectId } },
-      assignee: { connect: { id: '20fe7367-d3ee-4de5-8143-991d6245994f' } },
+      data,
+      projectId,
+      assigneeId: '20fe7367-d3ee-4de5-8143-991d6245994f',
     })
   }
 

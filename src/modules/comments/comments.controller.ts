@@ -31,9 +31,9 @@ export class CommentsController {
   @ValidateResourcesIds()
   create(@Param('taskId', ParseUUIDPipe) taskId: string, @Body() data: AddCommentDTO) {
     return this.commentService.create({
-      ...data,
-      task: { connect: { id: taskId } },
-      author: { connect: { id: '20fe7367-d3ee-4de5-8143-991d6245994f' } },
+      data,
+      taskId,
+      authorId: '20fe7367-d3ee-4de5-8143-991d6245994f',
     })
   }
 

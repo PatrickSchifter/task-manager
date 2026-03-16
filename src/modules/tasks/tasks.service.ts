@@ -1,13 +1,27 @@
 import { Injectable } from '@nestjs/common'
-import { Prisma } from 'src/generated/prisma/client'
 import { PrismaService } from 'src/prisma.service'
+import { TasksDTO } from './tasks.dto'
 
 @Injectable()
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: Prisma.TaskCreateInput) {
-    return this.prisma.task.create({ data })
+  create({
+    data,
+    assigneeId,
+    projectId,
+  }: {
+    data: TasksDTO
+    assigneeId: string
+    projectId: string
+  }) {
+    return this.prisma.task.create({
+      data: {
+        ...data,
+        assignee: { connect: { id: assigneeId } },
+        project: { connect: { id: projectId } },
+      },
+    })
   }
 
   findAllByProjectId(projectId: string) {
@@ -21,7 +35,7 @@ export class TasksService {
     })
   }
 
-  update({ id, data, projectId }: { id: string; data: Prisma.TaskUpdateInput; projectId: string }) {
+  update({ id, data, projectId }: { id: string; data: TasksDTO; projectId: string }) {
     return this.prisma.task.update({
       where: {
         id,
