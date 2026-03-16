@@ -15,7 +15,10 @@ export class TasksService {
   }
 
   findById({ id, projectId }: { id: string; projectId: string }) {
-    return this.prisma.task.findFirst({ where: { id, projectId } })
+    return this.prisma.task.findFirst({
+      where: { id, projectId },
+      include: { comments: { select: { id: true, taskId: true, authorId: true, content: true } } },
+    })
   }
 
   update({ id, data, projectId }: { id: string; data: Prisma.TaskUpdateInput; projectId: string }) {

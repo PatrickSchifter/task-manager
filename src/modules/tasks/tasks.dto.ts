@@ -39,6 +39,14 @@ export class TasksDTO {
   duoDate?: string
 }
 
+export class TaskCommentDTO {
+  @ApiProperty() id: string
+  @ApiProperty() taskId: string
+  @ApiProperty() content: string
+  @ApiProperty() authorId: string
+  @ApiProperty({ format: 'date-time' }) createAt: string
+}
+
 export class TaskItemListDTO {
   @ApiProperty() id: string
   @ApiProperty() title: string
@@ -49,4 +57,5 @@ export class TaskItemListDTO {
   @ApiProperty() projectId: string
   @ApiProperty({ format: 'date-time' }) createdAt: string
   @ApiProperty({ format: 'date-time' }) updatedAt: string
+  @ApiProperty({ type: [TaskCommentDTO] }) comments: TaskCommentDTO[]
 }
