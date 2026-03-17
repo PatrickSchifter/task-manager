@@ -36,7 +36,7 @@ class CollaboratorUserDTO {
   @ApiProperty({ nullable: true }) avatar: string
 }
 
-export class CollaboratorListItemDTO {
+export class CollaboratorItemListDTO {
   @ApiProperty() id: string
   @ApiProperty({ enum: CollaboratorRole }) role: CollaboratorRole
   @ApiProperty() projectId: string

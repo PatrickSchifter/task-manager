@@ -47,7 +47,7 @@ export class UpdateUsersDTO {
   role?: Role = Role.ADMIN
 }
 
-export class UserListItemDTO {
+export class UserItemListDTO {
   @ApiProperty() id: string
   @ApiProperty() name: string
   @ApiProperty() email: string
@@ -62,6 +62,6 @@ class UserProjectDTO {
   @ApiProperty({ nullable: true, required: false }) description: string
 }
 
-export class UserFullDTO extends UserListItemDTO {
+export class UserFullDTO extends UserItemListDTO {
   @ApiProperty({ type: [UserProjectDTO] }) createProjects: UserProjectDTO[]
 }

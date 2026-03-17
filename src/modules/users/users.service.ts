@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from 'src/generated/prisma/client'
 import { PrismaService } from 'src/prisma.service'
+import { UpdateUsersDTO } from './users.dto'
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,7 @@ export class UsersService {
     return this.prisma.user.findMany({ omit: { password: true } })
   }
 
-  update({ data, id }: { id: string; data: Prisma.UserUpdateInput }) {
+  update({ data, id }: { id: string; data: UpdateUsersDTO }) {
     return this.prisma.user.update({ where: { id }, data, omit: { password: true } })
   }
 

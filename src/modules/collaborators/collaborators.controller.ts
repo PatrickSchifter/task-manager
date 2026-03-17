@@ -16,7 +16,7 @@ import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-i
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import {
   AddCollaboratorDTO,
-  CollaboratorListItemDTO,
+  CollaboratorItemListDTO,
   UpdateCollaboratorDTO,
 } from './collaborator.dto'
 import { CollaboratorsService } from './collaborators.service'
@@ -31,14 +31,14 @@ export class CollaboratorsController {
 
   @Get()
   @ValidateResourcesIds()
-  @ApiResponse({ type: [CollaboratorListItemDTO] })
+  @ApiResponse({ type: [CollaboratorItemListDTO] })
   findAllByProject(@Param('projectId', ParseUUIDPipe) projectId: string) {
     return this.collaboratorsService.findAllByProject(projectId)
   }
 
   @Post()
   @ValidateResourcesIds()
-  @ApiCreatedResponse({ type: CollaboratorListItemDTO })
+  @ApiCreatedResponse({ type: CollaboratorItemListDTO })
   @HttpCode(HttpStatus.CREATED)
   create(@Param('projectId', ParseUUIDPipe) projectId: string, @Body() data: AddCollaboratorDTO) {
     return this.collaboratorsService.create({ data, projectId })
@@ -46,7 +46,7 @@ export class CollaboratorsController {
 
   @Put(':userId')
   @ValidateResourcesIds()
-  @ApiResponse({ type: CollaboratorListItemDTO })
+  @ApiResponse({ type: CollaboratorItemListDTO })
   update(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Param('userId', ParseUUIDPipe) userId: string,

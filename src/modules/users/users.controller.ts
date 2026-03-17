@@ -14,7 +14,7 @@ import {
 import { ApiCreatedResponse, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
-import { UpdateUsersDTO, UserFullDTO, UserListItemDTO, UsersDTO } from './users.dto'
+import { UpdateUsersDTO, UserFullDTO, UserItemListDTO, UsersDTO } from './users.dto'
 import { UsersService } from './users.service'
 
 @UseInterceptors(ValidateResourcesIdsInterceptor)
@@ -23,14 +23,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiResponse({ type: [UserListItemDTO] })
+  @ApiResponse({ type: [UserItemListDTO] })
   findAll() {
     return this.usersService.findAll()
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiCreatedResponse({ type: UserListItemDTO })
+  @ApiCreatedResponse({ type: UserItemListDTO })
   create(@Body() data: UsersDTO) {
     return this.usersService.create(data)
   }
@@ -44,7 +44,7 @@ export class UsersController {
   }
 
   @Put(':userId')
-  @ApiResponse({ type: UserListItemDTO })
+  @ApiResponse({ type: UserItemListDTO })
   @ValidateResourcesIds()
   async update(@Param('userId', ParseUUIDPipe) id: string, @Body() data: UpdateUsersDTO) {
     return this.usersService.update({ data, id })
