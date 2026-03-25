@@ -1,18 +1,24 @@
 import { Injectable } from '@nestjs/common'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { CollaboratorRole } from 'src/generated/prisma/enums'
 import { PrismaService } from 'src/prisma.service'
 import { ProjectDTO } from './projects.dto'
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly requestContext: RequestContextService,
+  ) {}
   findAll() {
-    return this.prisma.project.findMany()
+    const userId = this.requestContext.getUserId()
+    return this.prisma.project.findMany({ where: { createdById: userId } })
   }
 
   findById(id: string) {
+    const userId = this.requestContext.getUserId()
     return this.prisma.project.findFirst({
-      where: { id },
+      where: { id, createdById: userId },
       select: {
         tasks: {
           select: {
@@ -36,8 +42,9 @@ export class ProjectsService {
   }
 
   async create(data: ProjectDTO) {
+    const userId = this.requestContext.getUserId()
     const project = await this.prisma.project.create({
-      data: { ...data, createdById: '20fe7367-d3ee-4de5-8143-991d6245994f' },
+      data: { ...data, createdById: userId },
     })
 
     await this.prisma.projectCollaborator.create({
@@ -52,11 +59,17 @@ export class ProjectsService {
   }
 
   update(id: string, data: ProjectDTO) {
-    return this.prisma.project.update({ where: { id }, data })
+    const userId = this.requestContext.getUserId()
+    return this.prisma.project.update({ where: { id, createdById: userId }, data })
   }
 
   async delete(id: string) {
-    await this.prisma.task.deleteMany({ where: { projectId: id } })
-    return this.prisma.project.delete({ where: { id } })
+    const userId = this.requestContext.getUserId()
+    const project = await this.prisma.project.findFirst({ where: { id } })
+
+    if (project?.createdById === userId)
+      await this.prisma.task.deleteMany({ where: { projectId: id } })
+
+    return this.prisma.project.delete({ where: { id, createdById: userId } })
   }
 }

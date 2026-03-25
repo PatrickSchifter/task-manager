@@ -1,24 +1,21 @@
 import { Injectable } from '@nestjs/common'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { PrismaService } from 'src/prisma.service'
 import { TasksDTO } from './tasks.dto'
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly requestContext: RequestContextService,
+  ) {}
 
-  create({
-    data,
-    assigneeId,
-    projectId,
-  }: {
-    data: TasksDTO
-    assigneeId: string
-    projectId: string
-  }) {
+  create({ data, projectId }: { data: TasksDTO; projectId: string }) {
+    const userId = this.requestContext.getUserId()
     return this.prisma.task.create({
       data: {
         ...data,
-        assignee: { connect: { id: assigneeId } },
+        assignee: { connect: { id: userId } },
         project: { connect: { id: projectId } },
       },
     })

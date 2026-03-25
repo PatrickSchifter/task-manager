@@ -22,6 +22,12 @@ export class UsersService {
     })
   }
 
+  findByEmail(email: string) {
+    return this.prisma.user.findFirst({
+      where: { email },
+    })
+  }
+
   findAll() {
     return this.prisma.user.findMany({ omit: { password: true } })
   }

@@ -9,10 +9,12 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiNoContentResponse, ApiResponse } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { TaskItemListDTO, TasksDTO } from '../tasks/tasks.dto'
 import { TasksService } from './tasks.service'
@@ -22,6 +24,7 @@ import { TasksService } from './tasks.service'
   version: '1',
   path: 'projects/:projectId/tasks',
 })
+@UseGuards(JwtAuthGuard)
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
@@ -40,7 +43,6 @@ export class TasksController {
     return this.taskService.create({
       data,
       projectId,
-      assigneeId: '20fe7367-d3ee-4de5-8143-991d6245994f',
     })
   }
 
