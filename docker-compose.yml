@@ -15,4 +15,3 @@ services:
       - db-data:/var/lib/postgresql/data
 volumes:
   db-data:
-  redis-data:
