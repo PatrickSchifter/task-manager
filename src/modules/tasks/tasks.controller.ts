@@ -12,7 +12,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiCreatedResponse, ApiNoContentResponse, ApiResponse } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiResponse,
+} from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
@@ -25,6 +30,7 @@ import { TasksService } from './tasks.service'
   path: 'projects/:projectId/tasks',
 })
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('jwt')
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
