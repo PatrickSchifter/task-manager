@@ -9,13 +9,24 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger'
+import { FileInterceptor } from '@nestjs/platform-express'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiResponse,
+} from '@nestjs/swagger'
+import { memoryStorage } from 'multer'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
+import { CloudnaryService } from 'src/common/services/cloudnary/cloudnary.service'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { UpdateUsersDTO, UserFullDTO, UserItemListDTO, UsersDTO } from './users.dto'
 import { UsersService } from './users.service'
 
@@ -24,7 +35,11 @@ import { UsersService } from './users.service'
 @ApiBearerAuth('jwt')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cloudnaryService: CloudnaryService,
+    private readonly requestContext: RequestContextService,
+  ) {}
 
   @Get()
   @ApiResponse({ type: [UserItemListDTO] })
@@ -59,5 +74,39 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('userId', ParseUUIDPipe) id: string) {
     return this.usersService.delete(id)
+  }
+
+  @Post('avatar')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User avatar uploaded sucessfully',
+    type: UserItemListDTO,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid data',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
+  @ValidateResourcesIds()
+  async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
+    const user = this.requestContext.getUser()
+    const response = await this.cloudnaryService.upload({ file, folder: 'avatars', name: user.id })
+
+    await this.usersService.update({ data: { avatar: response.url }, id: user.id })
+
+    return this.usersService.findById(user.id)
   }
 }
