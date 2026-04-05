@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
@@ -19,6 +20,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
+import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { AddCommentDTO, CommentFullDTO, CommentItemListDTO, UpdateCommentDTO } from './comments.dto'
@@ -48,8 +50,11 @@ export class CommentsController {
   @Get()
   @ValidateResourcesIds()
   @ApiOkResponse({ type: [CommentItemListDTO] })
-  findAllByTaskId(@Param('taksId', ParseUUIDPipe) taskId: string) {
-    return this.commentService.findByTaskId(taskId)
+  findAllByTaskId(
+    @Param('taksId', ParseUUIDPipe) taskId: string,
+    @Query() query?: QueryPaginationDTO,
+  ) {
+    return this.commentService.findByTaskId({ taskId, query })
   }
 
   @Get(':commentId')
