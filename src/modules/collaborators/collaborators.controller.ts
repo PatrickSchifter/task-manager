@@ -23,6 +23,7 @@ import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-i
 import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import {
   AddCollaboratorDTO,
   CollaboratorItemListDTO,
@@ -42,7 +43,7 @@ export class CollaboratorsController {
 
   @Get()
   @ValidateResourcesIds()
-  @ApiResponse({ type: [CollaboratorItemListDTO] })
+  @ApiPaginatedResponse(CollaboratorItemListDTO)
   findAllByProject(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Query() query?: QueryPaginationDTO,

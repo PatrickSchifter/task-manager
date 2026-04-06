@@ -3,7 +3,7 @@ import { PaginatedResponseDTO, QueryPaginationDTO } from 'src/common/dtos/query.
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { Project } from 'src/generated/prisma/client'
 import { CollaboratorRole } from 'src/generated/prisma/enums'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'src/prisma/prisma.service'
 import { paginate, paginateOutput } from 'src/utils/pagination.utils'
 import { ProjectDTO } from './projects.dto'
 

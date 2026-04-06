@@ -23,6 +23,7 @@ import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-i
 import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { TaskItemListDTO, TasksDTO } from '../tasks/tasks.dto'
 import { TasksService } from './tasks.service'
 
@@ -37,7 +38,7 @@ export class TasksController {
   constructor(private readonly taskService: TasksService) {}
 
   @Get()
-  @ApiResponse({ type: [TaskItemListDTO] })
+  @ApiPaginatedResponse(TaskItemListDTO)
   @ValidateResourcesIds()
   findAllByProjectId(
     @Param('projectId', ParseUUIDPipe) projectId: string,

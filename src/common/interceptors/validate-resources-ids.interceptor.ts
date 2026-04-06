@@ -8,7 +8,7 @@ import {
 import { Reflector } from '@nestjs/core'
 import { Observable } from 'rxjs'
 import { VALIDATE_RESOURCES_IDS } from 'src/consts'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
 export class ValidateResourcesIdsInterceptor implements NestInterceptor {

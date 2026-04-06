@@ -12,7 +12,7 @@ import { MailModule } from './modules/mail/mail.module'
 import { ProjectsModule } from './modules/projects/projects.module'
 import { TasksModule } from './modules/tasks/tasks.module'
 import { UsersModule } from './modules/users/users.module'
-import { PrismaService } from './prisma.service'
+import { PrismaModule } from './prisma/prisma.module'
 
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { PrismaService } from './prisma.service'
       isGlobal: true,
       load: [appConfig],
     }),
+    PrismaModule,
     ProjectsModule,
     TasksModule,
     UsersModule,
@@ -29,6 +30,6 @@ import { PrismaService } from './prisma.service'
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, RequestContextService, CloudnaryService],
+  providers: [AppService, RequestContextService, CloudnaryService],
 })
 export class AppModule {}

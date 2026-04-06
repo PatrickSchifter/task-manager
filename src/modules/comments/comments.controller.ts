@@ -23,6 +23,7 @@ import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-i
 import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { AddCommentDTO, CommentFullDTO, CommentItemListDTO, UpdateCommentDTO } from './comments.dto'
 import { CommentsService } from './comments.service'
 
@@ -49,7 +50,7 @@ export class CommentsController {
 
   @Get()
   @ValidateResourcesIds()
-  @ApiOkResponse({ type: [CommentItemListDTO] })
+  @ApiPaginatedResponse(CommentItemListDTO)
   findAllByTaskId(
     @Param('taksId', ParseUUIDPipe) taskId: string,
     @Query() query?: QueryPaginationDTO,

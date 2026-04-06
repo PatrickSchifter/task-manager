@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -23,6 +24,7 @@ import {
 } from '@nestjs/swagger'
 import { memoryStorage } from 'multer'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
+import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { CloudnaryService } from 'src/common/services/cloudnary/cloudnary.service'
@@ -43,8 +45,8 @@ export class UsersController {
 
   @Get()
   @ApiResponse({ type: [UserItemListDTO] })
-  findAll() {
-    return this.usersService.findAll()
+  findAll(@Query() query?: QueryPaginationDTO) {
+    return this.usersService.findAll(query)
   }
 
   @Post()

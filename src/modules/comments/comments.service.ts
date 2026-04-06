@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { PaginatedResponseDTO, QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
 import { Comment } from 'src/generated/prisma/client'
-import { PrismaService } from 'src/prisma.service'
+import { PrismaService } from 'src/prisma/prisma.service'
 import { paginate, paginateOutput } from 'src/utils/pagination.utils'
 import { AddCommentDTO, UpdateCommentDTO } from './comments.dto'
 
