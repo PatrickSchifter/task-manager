@@ -11,4 +11,4 @@
 - [ ] **Request ID / Correlation ID**: Propagar um correlation ID via middleware/interceptor pra rastrear requests entre a API e o consumer do RabbitMQ.
 - [ ] **Tratamento de falhas no RabbitMQ**: Se o consumer falhar ao enviar o e-mail, não há dead-letter queue ou retry config. Configurar `prefetchCount`, DLQ e retry com backoff.
 - [ ] **Seeding e fixtures**: Adicionar script de seed com dados fictícios pra facilitar dev e testes manuais.
-- [ ] **`.DS_Store` no gitignore**: Tem um `src/.DS_Store` committed — adicionar `*.DS_Store` ao `.gitignore` e remover o arquivo do repositório.
+- [x] **`.DS_Store` no gitignore**: Já presente no `.gitignore` e removido do commit.
