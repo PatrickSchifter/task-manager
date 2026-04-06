@@ -1,6 +1,6 @@
 ## TODO / Melhorias Futuras
 
-- [ ] **PrismaService global**: Atualmente o `PrismaService` está declarado nos `providers` de cada módulo individualmente, criando múltiplas instâncias desnecessárias. Criar um `PrismaModule` com `@Global()` e registrá-lo no `AppModule` para compartilhar uma única instância em toda a aplicação.
+- [x] **PrismaService global**: Atualmente o `PrismaService` está declarado nos `providers` de cada módulo individualmente, criando múltiplas instâncias desnecessárias. Criar um `PrismaModule` com `@Global()` e registrá-lo no `AppModule` para compartilhar uma única instância em toda a aplicação.
 - [ ] **RabbitMQ consumer separado**: O `MailConsumer` roda no mesmo processo da API (`@Controller()`) em vez de ser um worker independente. Em produção, separar consumer em processo próprio evita disputa de recursos e falhas no mail afetarem as rotas.
 - [ ] **Health checks**: Adicionar `@nestjs/terminus` com checks de saúde para PostgreSQL, RabbitMQ e SMTP. Útil pra monitoramento e readiness/liveness em deploy.
 - [ ] **Rate limiting na rota de forgot-password**: Apesar do RabbitMQ agilizar a resposta, não há proteção contra abuso. Adicionar `@nestjs/throttler` na rota `forgotPassword` pra evitar spam de e-mails.
