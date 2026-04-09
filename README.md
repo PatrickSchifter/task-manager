@@ -244,6 +244,6 @@ MIT License
 
 ## Contact
 
-Your Name - [your-email@example.com](mailto:your-email@example.com)
+Patrick Schifter - [schiftercorp@outlook.com](mailto:schiftercorp@outlook.com)
 
-Project Link: [https://github.com/your-username/task-manager](https://github.com/your-username/task-manager)
+Project Link: [https://github.com/PatrickSchifter/task-manager](https://github.com/PatrickSchifter/task-manager)
