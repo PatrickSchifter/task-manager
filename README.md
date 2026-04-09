@@ -240,7 +240,7 @@ The API uses JWT Bearer tokens. To authenticate:
 
 ## License
 
-This project is unlicensed (UNLICENSED). Please specify an appropriate license for your use case.
+MIT License
 
 ## Contact
 
