@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Task Manager API')
-    .setDescription('Api developing to help tasks to be done.')
+    .setDescription('Api developed to help tasks to be done.')
     .setVersion('1')
     .addBearerAuth(
       {
