@@ -17,6 +17,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiOkResponse,
   ApiResponse,
 } from '@nestjs/swagger'
 import { ValidateResourcesIds } from 'src/common/decorators/validate-resources-ids.decorator'
@@ -24,7 +25,7 @@ import { QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
-import { TaskItemListDTO, TasksDTO } from '../tasks/tasks.dto'
+import { TaskFullDTO, TaskItemListDTO, TasksRequestDTO } from '../tasks/tasks.dto'
 import { TasksService } from './tasks.service'
 
 @UseInterceptors(ValidateResourcesIdsInterceptor)
@@ -51,7 +52,7 @@ export class TasksController {
   @ApiCreatedResponse({ type: TaskItemListDTO })
   @HttpCode(HttpStatus.CREATED)
   @ValidateResourcesIds()
-  create(@Param('projectId', ParseUUIDPipe) projectId: string, @Body() data: TasksDTO) {
+  create(@Param('projectId', ParseUUIDPipe) projectId: string, @Body() data: TasksRequestDTO) {
     return this.taskService.create({
       data,
       projectId,
@@ -59,7 +60,7 @@ export class TasksController {
   }
 
   @Get(':taskId')
-  @ApiResponse({ type: TaskItemListDTO })
+  @ApiResponse({ type: TaskFullDTO })
   @ValidateResourcesIds()
   findById(
     @Param('projectId', ParseUUIDPipe) projectId: string,
@@ -69,12 +70,12 @@ export class TasksController {
   }
 
   @Put(':taskId')
-  @ApiResponse({ type: TaskItemListDTO })
+  @ApiOkResponse({ type: TaskItemListDTO })
   @ValidateResourcesIds()
   update(
     @Param('taskId', ParseUUIDPipe) taskId: string,
     @Param('projectId', ParseUUIDPipe) projectId: string,
-    @Body() data: TasksDTO,
+    @Body() data: TasksRequestDTO,
   ) {
     return this.taskService.update({ data, id: taskId, projectId })
   }

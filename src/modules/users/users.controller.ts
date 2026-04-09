@@ -29,6 +29,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { ValidateResourcesIdsInterceptor } from 'src/common/interceptors/validate-resources-ids.interceptor'
 import { CloudnaryService } from 'src/common/services/cloudnary/cloudnary.service'
 import { RequestContextService } from 'src/common/services/request-context/request-context.service'
+import { ApiPaginatedResponse } from 'src/common/swagger/api-paginated-response'
 import { UpdateUsersDTO, UserFullDTO, UserItemListDTO, UsersDTO } from './users.dto'
 import { UsersService } from './users.service'
 
@@ -44,7 +45,7 @@ export class UsersController {
   ) {}
 
   @Get()
-  @ApiResponse({ type: [UserItemListDTO] })
+  @ApiPaginatedResponse(UserItemListDTO)
   findAll(@Query() query?: QueryPaginationDTO) {
     return this.usersService.findAll(query)
   }

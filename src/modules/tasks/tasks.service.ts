@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common'
 import { PaginatedResponseDTO, QueryPaginationDTO } from 'src/common/dtos/query.pagination.dto'
-import { RequestContextService } from 'src/common/services/request-context/request-context.service'
-import { Task } from 'src/generated/prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { paginate, paginateOutput } from 'src/utils/pagination.utils'
-import { TasksDTO } from './tasks.dto'
+import { TaskItemListDTO, TasksRequestDTO } from './tasks.dto'
 
 @Injectable()
 export class TasksService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly requestContext: RequestContextService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  create({ data, projectId }: { data: TasksDTO; projectId: string }) {
-    const userId = this.requestContext.getUserId()
+  create({ data, projectId }: { data: TasksRequestDTO; projectId: string }) {
     return this.prisma.task.create({
       data: {
         ...data,
-        assignee: { connect: { id: userId } },
-        project: { connect: { id: projectId } },
+        projectId,
       },
+      include: { assignee: { select: { id: true, name: true, email: true, avatar: true } } },
     })
   }
 
@@ -30,11 +24,33 @@ export class TasksService {
   }: {
     projectId: string
     query?: QueryPaginationDTO
-  }): Promise<PaginatedResponseDTO<Task>> {
+  }): Promise<PaginatedResponseDTO<TaskItemListDTO>> {
     const { skip, take } = paginate(query)
     const where = { projectId }
 
-    const tasks = await this.prisma.task.findMany({ where, skip, take })
+    const tasks = await this.prisma.task.findMany({
+      where,
+      skip,
+      take,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        status: true,
+        priority: true,
+        dueDate: true,
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    })
     const total = await this.prisma.task.count({ where })
 
     return paginateOutput({ data: tasks, total, query })
@@ -43,17 +59,23 @@ export class TasksService {
   findById({ id, projectId }: { id: string; projectId: string }) {
     return this.prisma.task.findFirst({
       where: { id, projectId },
-      include: { comments: { select: { id: true, taskId: true, authorId: true, content: true } } },
+      include: {
+        assignee: { select: { id: true, name: true, email: true, avatar: true } },
+        comments: {
+          include: { author: { select: { id: true, name: true, email: true, avatar: true } } },
+        },
+      },
     })
   }
 
-  update({ id, data, projectId }: { id: string; data: TasksDTO; projectId: string }) {
+  update({ id, data, projectId }: { id: string; data: TasksRequestDTO; projectId: string }) {
     return this.prisma.task.update({
       where: {
         id,
         projectId,
       },
       data,
+      include: { assignee: { select: { id: true, name: true, email: true, avatar: true } } },
     })
   }
 

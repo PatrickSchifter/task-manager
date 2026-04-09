@@ -55,13 +55,16 @@ export class CommentsService {
   }): Promise<PaginatedResponseDTO<Comment>> {
     const { skip, take } = paginate(query)
     const where = { taskId }
+
+    const total = await this.prisma.comment.count({ where })
+
     const comments = await this.prisma.comment.findMany({
       where,
       skip,
       take,
       include: { author: authorAttributes },
     })
-    const total = await this.prisma.comment.count({ where })
+
     return paginateOutput({ data: comments, total, query })
   }
 
