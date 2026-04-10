@@ -17,8 +17,8 @@ import type * as Prisma from "./prismaNamespace.js"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.4.1",
-  "engineVersion": "55ae170b1ced7fc6ed07a15f110549408c501bb3",
+  "clientVersion": "7.7.0",
+  "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
   "activeProvider": "postgresql",
   "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum Role {\n  USER\n  ADMIN\n}\n\nmodel User {\n  id       String  @id @default(uuid())\n  name     String\n  email    String  @unique\n  password String\n  avatar   String?\n  role     Role    @default(USER)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  createProjects Project[]             @relation(\"UserProjects\")\n  tasksAssigned  Task[]                @relation(\"AssignedTasks\")\n  comments       Comment[]\n  collaborations ProjectCollaborator[]\n}\n\nenum CollaboratorRole {\n  VIEWER\n  EDITOR\n  OWNER\n}\n\nmodel ProjectCollaborator {\n  id        String           @id @default(uuid())\n  role      CollaboratorRole @default(EDITOR)\n  projectId String\n  userId    String\n\n  createdAt DateTime @default(now())\n\n  user    User    @relation(fields: [userId], references: [id])\n  project Project @relation(fields: [projectId], references: [id])\n\n  @@unique([userId, projectId])\n}\n\nmodel Comment {\n  id       String @id @default(uuid())\n  content  String\n  authorId String\n  taskId   String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  author User @relation(fields: [authorId], references: [id])\n  task   Task @relation(fields: [taskId], references: [id])\n}\n\nmodel Project {\n  id          String  @id @default(uuid())\n  name        String\n  description String?\n  createdById String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  tasks         Task[]\n  createdBy     User                  @relation(\"UserProjects\", fields: [createdById], references: [id])\n  collaborators ProjectCollaborator[]\n}\n\nenum TaskStatus {\n  TODO\n  IN_PROGRESS\n  DONE\n}\n\nmodel Task {\n  id          String       @id @default(uuid())\n  title       String\n  description String?\n  status      TaskStatus   @default(TODO)\n  priority    TaskPriority @default(MEDIUM)\n  dueDate     DateTime?\n  projectId   String\n  assigneeId  String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  project  Project   @relation(fields: [projectId], references: [id])\n  assignee User?     @relation(\"AssignedTasks\", fields: [assigneeId], references: [id])\n  comments Comment[]\n}\n\nenum TaskPriority {\n  LOW\n  MEDIUM\n  HIGH\n}\n",
   "runtimeDataModel": {
@@ -67,7 +67,9 @@ export interface PrismaClientConstructor {
    * Type-safe database client for TypeScript
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Users
    * const users = await prisma.user.findMany()
    * ```
@@ -89,7 +91,9 @@ export interface PrismaClientConstructor {
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Users
  * const users = await prisma.user.findMany()
  * ```

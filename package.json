@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:dev": "prisma db push",
     "prisma:generate": "prisma generate",
+    "prisma:seed": "node_modules/.bin/tsx prisma/seed.ts",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy"
   },
@@ -33,7 +34,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.6",
     "@prisma/adapter-pg": "^7.4.1",
-    "@prisma/client": "7.4.1",
+    "@prisma/client": "7.7.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
@@ -60,13 +61,14 @@
     "@types/supertest": "^6.0.2",
     "globals": "^16.0.0",
     "jest": "^30.0.0",
-    "prisma": "^7.4.1",
+    "prisma": "^7.7.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.3"
   },
   "jest": {
@@ -84,6 +86,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }

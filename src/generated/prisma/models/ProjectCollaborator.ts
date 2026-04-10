@@ -158,7 +158,7 @@ export type ProjectCollaboratorGroupByOutputType = {
   _max: ProjectCollaboratorMaxAggregateOutputType | null
 }
 
-type GetProjectCollaboratorGroupByPayload<T extends ProjectCollaboratorGroupByArgs> = Prisma.PrismaPromise<
+export type GetProjectCollaboratorGroupByPayload<T extends ProjectCollaboratorGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProjectCollaboratorGroupByOutputType, T['by']> &
       {
@@ -1252,6 +1252,11 @@ export type ProjectCollaboratorFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` ProjectCollaborators.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProjectCollaborators.
+   */
   distinct?: Prisma.ProjectCollaboratorScalarFieldEnum | Prisma.ProjectCollaboratorScalarFieldEnum[]
 }
 
