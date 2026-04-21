@@ -88,6 +88,7 @@ export class ProjectsService {
     if (project?.createdById === userId)
       await this.prisma.task.deleteMany({ where: { projectId: id } })
 
-    return this.prisma.project.delete({ where: { id, createdById: userId } })
+    await this.prisma.project.delete({ where: { id, createdById: userId } })
+    return
   }
 }

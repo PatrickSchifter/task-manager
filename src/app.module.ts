@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module'
 import { CommentsModule } from './modules/comments/comments.module'
 import { MailModule } from './modules/mail/mail.module'
+import { McpModule } from './modules/mcp/mcp.module'
 import { ProjectsModule } from './modules/projects/projects.module'
 import { TasksModule } from './modules/tasks/tasks.module'
 import { UsersModule } from './modules/users/users.module'
@@ -28,6 +29,7 @@ import { PrismaModule } from './prisma/prisma.module'
     CommentsModule,
     AuthModule,
     MailModule,
+    McpModule,
   ],
   controllers: [AppController],
   providers: [AppService, RequestContextService, CloudnaryService],
