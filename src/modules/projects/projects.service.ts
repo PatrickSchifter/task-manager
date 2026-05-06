@@ -18,7 +18,19 @@ export class ProjectsService {
     const userId = this.requestContext.getUserId()
 
     const { skip, take } = paginate(query)
-    const where = { createdById: userId }
+
+    const where = {
+      OR: [
+        { createdById: userId },
+        {
+          collaborators: {
+            some: {
+              userId: userId,
+            },
+          },
+        },
+      ],
+    }
 
     const projects = await this.prisma.project.findMany({
       where,
@@ -35,8 +47,21 @@ export class ProjectsService {
 
   findById(id: string) {
     const userId = this.requestContext.getUserId()
+
     return this.prisma.project.findFirst({
-      where: { id, createdById: userId },
+      where: {
+        id,
+        OR: [
+          { createdById: userId },
+          {
+            collaborators: {
+              some: {
+                userId: userId,
+              },
+            },
+          },
+        ],
+      },
       select: {
         tasks: {
           select: {
