@@ -91,7 +91,7 @@ model Task {
   priority      TaskPriority @default(MEDIUM)
   dueDate       DateTime?
   projectId     String
-  assigneeId    String
+  assigneeId    String?
   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

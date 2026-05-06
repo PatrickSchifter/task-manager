@@ -51,9 +51,9 @@ export class MailService {
    * Você pode continuar usando via fila/microservice
    */
   async sendPasswordRequest(email: string, token: string) {
-    const url_base = this.configService.getOrThrow<string>('app.url_base')
+    const web_app_url = this.configService.getOrThrow<string>('app.web_app_url_base')
 
-    const url = `${url_base}/v1/auth/reset-password?token=${token}`
+    const url = `${web_app_url}/reset-password?token=${token}`
     this.client.emit(SEND_PASSWORD_RESET, { email, url })
   }
 

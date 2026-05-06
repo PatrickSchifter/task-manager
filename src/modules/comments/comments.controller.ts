@@ -52,7 +52,7 @@ export class CommentsController {
   @ValidateResourcesIds()
   @ApiPaginatedResponse(CommentItemListDTO)
   findAllByTaskId(
-    @Param('taksId', ParseUUIDPipe) taskId: string,
+    @Param('taskId', ParseUUIDPipe) taskId: string,
     @Query() query?: QueryPaginationDTO,
   ) {
     return this.commentService.findByTaskId({ taskId, query })
