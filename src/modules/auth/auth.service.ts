@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
+import { RequestContextService } from 'src/common/services/request-context/request-context.service'
+import { User } from 'src/generated/prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { MailService } from '../mail/mail.service'
 import { UsersService } from '../users/users.service'
@@ -19,6 +21,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
     private readonly prisma: PrismaService,
+    private readonly requestContext: RequestContextService,
   ) {}
 
   async signup(data: SignUpDTO) {
@@ -83,5 +86,10 @@ export class AuthService {
       console.error(error)
       throw new BadRequestException('Invalid or expired token')
     }
+  }
+
+  async findMe(): Promise<Omit<User, 'password'>> {
+    const { avatar, createdAt, email, id, name, role, updatedAt } = this.requestContext.getUser()
+    return { avatar, createdAt, email, id, name, role, updatedAt }
   }
 }

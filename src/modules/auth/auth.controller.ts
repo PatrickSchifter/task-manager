@@ -1,5 +1,6 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common'
 import { ApiCreatedResponse } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth/jwt-auth.guard'
 import { UserItemListDTO } from '../users/users.dto'
 import { ForgotPasswordDTO, ResetPasswordDTO, SignInDTO, SignUpDTO } from './auth.dto'
 import { AuthService } from './auth.service'
@@ -31,5 +32,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   resetPassword(@Body() data: ResetPasswordDTO) {
     return this.authService.resetPassword(data.token, data.newPassword)
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getMe() {
+    return this.authService.findMe()
   }
 }
