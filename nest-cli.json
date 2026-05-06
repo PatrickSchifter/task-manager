@@ -6,8 +6,8 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "modules/mail/templates/**/*.hbs",
-        "watchAssets": true
+        "include": "src/modules/mail/templates/**/*",
+        "outDir": "dist/src/modules/mail/templates"
       }
     ]
   },

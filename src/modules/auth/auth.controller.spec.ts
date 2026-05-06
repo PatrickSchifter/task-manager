@@ -89,8 +89,6 @@ describe('AuthController', () => {
         resetPasswordDto.token,
         resetPasswordDto.newPassword,
       )
-      console.log('result', result)
-      console.log(serviceResult)
       expect(result).toEqual(serviceResult)
     })
   })

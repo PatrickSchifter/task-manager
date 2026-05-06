@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ClientProxy } from '@nestjs/microservices'
+import * as fs from 'fs'
+import * as handlebars from 'handlebars'
+import * as path from 'path'
 import { Resend } from 'resend'
 import { EMAIL_SERVICE, SEND_PASSWORD_RESET } from 'src/consts'
 
@@ -14,6 +17,15 @@ export class MailService {
   ) {
     const apiKey = this.configService.getOrThrow<string>('RESEND_API_KEY')
     this.resend = new Resend(apiKey)
+  }
+
+  private renderTemplate(templateName: string, data: any) {
+    const filePath = path.join(process.cwd(), 'templates', `${templateName}.hbs`)
+
+    const template = fs.readFileSync(filePath, 'utf-8')
+    const compiled = handlebars.compile(template)
+
+    return compiled(data)
   }
 
   /**
@@ -40,8 +52,8 @@ export class MailService {
    */
   async sendPasswordRequest(email: string, token: string) {
     const url_base = this.configService.getOrThrow<string>('app.url_base')
-    const url = `${url_base}/v1/auth/reset-password?token=${token}`
 
+    const url = `${url_base}/v1/auth/reset-password?token=${token}`
     this.client.emit(SEND_PASSWORD_RESET, { email, url })
   }
 
@@ -49,15 +61,8 @@ export class MailService {
    * 🚀 Nova versão direta (sem fila)
    * Pode usar quando quiser simplificar
    */
-  async sendPasswordRequestDirect(email: string, token: string) {
-    const url_base = this.configService.getOrThrow<string>('app.url_base')
-    const url = `${url_base}/v1/auth/reset-password?token=${token}`
-
-    const html = `
-      <h1>Redefinição de senha</h1>
-      <p>Clique no link abaixo para redefinir sua senha:</p>
-      <a href="${url}">${url}</a>
-    `
+  async sendPasswordRequestDirect(email: string, url: string) {
+    const html = this.renderTemplate('forgot-password', { url })
 
     return this.sendEmail(email, 'Redefinição de senha', html)
   }

@@ -37,7 +37,7 @@ export class ValidateResourcesIdsInterceptor implements NestInterceptor {
 
     if (userId) {
       const user = await this.prisma.user.findFirst({ where: { id: userId } })
-      console.log(user)
+
       if (!user) throw new NotFoundException('User not found.')
     }
 
