@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -22,6 +23,8 @@ export class AuthService {
 
   async signup(data: SignUpDTO) {
     const hash = await bcrypt.hash(data.password, 12)
+    const userExists = await this.usersService.findByEmail(data.email)
+    if (userExists) throw new ConflictException()
 
     const newUser = await this.usersService.create({ ...data, password: hash })
 
