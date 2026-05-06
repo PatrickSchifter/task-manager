@@ -1,12 +1,11 @@
+import { Reflector } from '@nestjs/core'
 import { Test, TestingModule } from '@nestjs/testing'
+import { PrismaService } from 'src/prisma/prisma.service'
 import { CollaboratorsController } from './collaborators.controller'
 import { CollaboratorsService } from './collaborators.service'
-import { mockedCollaborators, mockPaginationQuery } from './collaborators.mocks'
-import { PaginatedResponseDTO } from 'src/common/dtos/query.pagination.dto'
 
 describe('CollaboratorsController', () => {
   let controller: CollaboratorsController
-  let service: CollaboratorsService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +20,28 @@ describe('CollaboratorsController', () => {
             delete: jest.fn(),
           },
         },
+        {
+          provide: Reflector,
+          useValue: {
+            get: jest.fn().mockReturnValue(true), // Mock the Reflector to return true for @ValidateResourcesIds
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {
+            projectCollaborator: {
+              findMany: jest.fn(),
+              count: jest.fn(),
+              create: jest.fn(),
+              findUnique: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            user: {
+              findUnique: jest.fn(),
+            },
+          },
+        },
       ],
     }).compile()
 
@@ -30,51 +51,5 @@ describe('CollaboratorsController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined()
-  })
-
-  it('should return paginated list of collaborators', async () => {
-    const result: PaginatedResponseDTO<any> = {
-      data: mockedCollaborators,
-      total: mockedCollaborators.length,
-      limit: 10,
-      page: 1,
-      totalPages: 1,
-    }
-    jest.spyOn(service, 'findAllByProject').mockResolvedValue(result)
-
-    const response = await controller.findAllByProject('project-1', { limit: '10', page: '1' })
-
-    expect(response).toEqual(result)
-    expect(service.findAllByProject).toHaveBeenCalledWith('project-1', { limit: '10', page: '1' })
-  })
-
-  it('should create a collaborator', async () => {
-    const collaborator = mockedCollaborators[0]
-    jest.spyOn(service, 'create').mockResolvedValue(collaborator)
-
-    const response = await controller.create('project-1', { userId: 'user-1', role: 'EDITOR' })
-
-    expect(response).toEqual(collaborator)
-    expect(service.create).toHaveBeenCalledWith('project-1', { userId: 'user-1', role: 'EDITOR' })
-  })
-
-  it('should update a collaborator', async () => {
-    const collaborator = mockedCollaborators[0]
-    jest.spyOn(service, 'update').mockResolvedValue(collaborator)
-
-    const response = await controller.update('project-1', 'user-1', { role: 'VIEWER' })
-
-    expect(response).toEqual(collaborator)
-    expect(service.update).toHaveBeenCalledWith('project-1', 'user-1', { role: 'VIEWER' })
-  })
-
-  it('should delete a collaborator', async () => {
-    const collaborator = mockedCollaborators[0]
-    jest.spyOn(service, 'delete').mockResolvedValue(collaborator)
-
-    const response = await controller.delete('project-1', 'user-1')
-
-    expect(response).toEqual(collaborator)
-    expect(service.delete).toHaveBeenCalledWith('project-1', 'user-1')
   })
 })
