@@ -86,8 +86,11 @@ export class ProjectsService {
     const userId = this.requestContext.getUserId()
     const project = await this.prisma.project.findFirst({ where: { id } })
 
-    if (project?.createdById === userId)
+    if (project?.createdById === userId) {
+      await this.prisma.projectCollaborator.deleteMany({ where: { projectId: id } })
+      await this.prisma.comment.deleteMany({ where: { task: { projectId: id } } })
       await this.prisma.task.deleteMany({ where: { projectId: id } })
+    }
 
     await this.prisma.project.delete({ where: { id, createdById: userId } })
     return
