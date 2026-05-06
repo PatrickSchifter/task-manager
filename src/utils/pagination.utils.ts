@@ -24,7 +24,7 @@ export const paginateOutput = <T>({
   const page = Math.abs(Number(query?.page ?? DEFAULT_PAGE_NUMBER))
   const limit = Math.abs(Number(query?.limit ?? DEFAULT_PAGE_LIMIT))
 
-  const lastPage = Math.ceil(total / limit)
+  const lastPage = Math.max(1, Math.ceil(total / limit))
 
   if (page > lastPage)
     throw new NotFoundException(`Page ${page} not found. Last page is ${lastPage}`)
