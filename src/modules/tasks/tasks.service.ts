@@ -12,9 +12,19 @@ export class TasksService {
     return this.prisma.task.create({
       data: {
         ...data,
+        dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00.000Z`) : undefined,
         projectId,
       },
-      include: { assignee: { select: { id: true, name: true, email: true, avatar: true } } },
+      include: {
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
     })
   }
 
