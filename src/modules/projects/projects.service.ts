@@ -55,6 +55,7 @@ export class ProjectsService {
         name: true,
         description: true,
         id: true,
+        createdById: true,
       },
     })
   }
