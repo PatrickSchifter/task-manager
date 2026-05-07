@@ -92,6 +92,7 @@ model Task {
   dueDate       DateTime?
   projectId     String
   assigneeId    String?
+  order         Int?
   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
