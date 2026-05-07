@@ -33,6 +33,7 @@ export class CloudnaryService {
             reject(error)
           } else {
             const url = cloudnary.url(result.public_id, {
+              version: result.version,
               fetch_format: 'auto',
               quality: 'auto',
             })
