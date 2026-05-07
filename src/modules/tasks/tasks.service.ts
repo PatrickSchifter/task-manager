@@ -84,7 +84,10 @@ export class TasksService {
         id,
         projectId,
       },
-      data,
+      data: {
+        ...data,
+        dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00.000Z`) : undefined,
+      },
       include: { assignee: { select: { id: true, name: true, email: true, avatar: true } } },
     })
   }
